@@ -147,3 +147,45 @@ class Comment {
         this.likeCount++;
     }
 }
+
+const alice = new User("Alice", "alice@example.com", "Hello, I'm Alice!");
+const bob = new User("Bob", "bob@example.com", "Hi, I'm Bob the builder.");
+
+console.log(`\n- Users Created -`);
+console.log(`Alice ID: ${alice.userId}, Bob ID: ${bob.userId}`);
+
+const techChat = new Chat("Tech Talk Group", true);
+
+alice.addChat(techChat);
+techChat.addUser(bob);
+
+console.log(`\n- Chat Created -`);
+console.log(`Chat ID: ${techChat.chatId}, Participants: ${techChat.users.length}`); // Expect 2
+
+const msg1 = new Message("Hello everyone!", alice, techChat);
+const msg2 = new Message("Hi Alice, what's new?", bob, techChat);
+
+alice.addMessage(msg1);
+bob.addMessage(msg2);
+techChat.addMessage(msg1);
+techChat.addMessage(msg2);
+
+console.log(`Number of messages in chat: ${techChat.messages.length}`); 
+
+const postByAlice = new Post("Just launched a new feature!", alice, "photo.jpg");
+alice.addPost(postByAlice);
+
+const commentByBob = new Comment("Great job, Alice!", bob, postByAlice);
+bob.addComment(commentByBob);
+postByAlice.addComment(commentByBob);
+
+console.log(`\n- Post Created -`);
+console.log(`Post ID: ${postByAlice.postId} (Author: Alice)`);
+console.log(`Number of comments: ${postByAlice.commentCount}`);
+
+bob.likePost(postByAlice);
+
+console.log(`\n- Post Likes -`);
+console.log(`Likes on the post: ${postByAlice.likes.length}`); 
+console.log(`Likes by Bob: ${bob.likedPosts.length}`); 
+console.log(`User ID who liked: ${postByAlice.likes[0].userId}`); 
