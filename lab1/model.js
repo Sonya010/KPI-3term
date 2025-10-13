@@ -4,27 +4,6 @@ let idForMessage = 1;
 let idForPost = 1;
 let idForComment = 1;
 
-
-class PostLike {
-    constructor(userId, postId, timestamp = new Date()) {
-        this.userId = userId;
-        this.postId = postId;
-        this.timestamp = timestamp;
-        this.compositeKey = `${userId}_${postId}`;
-    }
-}
-
-class ChatUser {
-    constructor(userId, chatId, joinedAt = new Date(), role = 'member') {
-        this.userId = userId;
-        this.chatId = chatId;
-        this.joinedAt = joinedAt;
-        this.role = role;
-        this.compositeKey = `${chatId}_${userId}`;
-    }
-}
-
-
 class User {
     constructor(username, email, bio = null, profilePicture = null) {
         this.userId = idForUser++;
@@ -33,11 +12,11 @@ class User {
         this.bio = bio;
         this.profilePicture = profilePicture;
 
-        this.chats = [];       // ChatUser[]
-        this.messages = [];    // Message[]
-        this.posts = [];       // Post[]
-        this.comments = [];    // Comment[]
-        this.likedPosts = [];  // PostLike[]
+        this.chats = [];       
+        this.messages = [];    
+        this.posts = [];       
+        this.comments = [];    
+        this.likedPosts = [];  
     }
 
     addChat(chat) {
@@ -73,8 +52,8 @@ class Chat {
         this.isGroup = isGroup;
         this.avatar = avatar;
 
-        this.users = [];    // ChatUser[]
-        this.messages = []; // Message[]
+        this.users = [];   
+        this.messages = []; 
     }
 
     addUser(user) {
@@ -97,8 +76,8 @@ class Message {
 
         if (!sender || !chat) throw new Error('Message requires a sender and a chat.');
 
-        this.senderId = sender.userId; // FK
-        this.chatId = chat.chatId;     // FK
+        this.senderId = sender.userId; 
+        this.chatId = chat.chatId;     
     }
 }
 
@@ -111,9 +90,9 @@ class Post {
 
         if (!author) throw new Error('Post requires an author.');
 
-        this.authorId = author.userId; // FK
-        this.comments = []; // Comment[]
-        this.likes = [];    // PostLike[]
+        this.authorId = author.userId; 
+        this.comments = []; 
+        this.likes = [];    
         this.commentCount = 0;
     }
 
@@ -139,12 +118,31 @@ class Comment {
 
         if (!author || !post) throw new Error('Comment requires an author and a post.');
 
-        this.authorId = author.userId; // FK
-        this.postId = post.postId;     // FK
+        this.authorId = author.userId; 
+        this.postId = post.postId;     
     }
 
     addLike() {
         this.likeCount++;
+    }
+}
+
+class PostLike {
+    constructor(userId, postId, timestamp = new Date()) {
+        this.userId = userId;
+        this.postId = postId;
+        this.timestamp = timestamp;
+        this.compositeKey = `${userId}_${postId}`;
+    }
+}
+
+class ChatUser {
+    constructor(userId, chatId, joinedAt = new Date(), role = 'member') {
+        this.userId = userId;
+        this.chatId = chatId;
+        this.joinedAt = joinedAt;
+        this.role = role;
+        this.compositeKey = `${chatId}_${userId}`;
     }
 }
 
@@ -160,7 +158,7 @@ alice.addChat(techChat);
 techChat.addUser(bob);
 
 console.log(`\n- Chat Created -`);
-console.log(`Chat ID: ${techChat.chatId}, Participants: ${techChat.users.length}`); // Expect 2
+console.log(`Chat ID: ${techChat.chatId}, Participants: ${techChat.users.length}`); 
 
 const msg1 = new Message("Hello everyone!", alice, techChat);
 const msg2 = new Message("Hi Alice, what's new?", bob, techChat);
