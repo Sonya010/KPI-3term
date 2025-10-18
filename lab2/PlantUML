@@ -1,0 +1,55 @@
+@startuml
+left to right direction
+
+actor User
+actor Service
+
+usecase "Share post" as UC_SharePost
+usecase "Post photo" as UC_PostPhoto
+usecase "Like post" as UC_LikePost
+usecase "Upload story" as UC_UploadStory
+usecase "Send message" as UC_SendMessage
+usecase "Receive notification" as UC_ReceiveNotification
+usecase "Comment post" as UC_CommentPost
+usecase "Change password" as UC_ChangePassword
+usecase "Block user" as UC_BlockUser
+usecase "View feed" as UC_ViewFeed
+usecase "Report post" as UC_ReportPost
+usecase "Edit profile" as UC_EditProfile
+usecase "Login" as UC_Login
+usecase "Register account" as UC_RegisterAccount
+usecase "Delete post" as UC_DeletePost
+usecase "Authenticate user" as UC_AuthenticateUser
+
+User --> UC_SharePost
+User --> UC_PostPhoto
+User --> UC_LikePost
+User --> UC_UploadStory
+User --> UC_SendMessage
+User --> UC_CommentPost
+User --> UC_ChangePassword
+User --> UC_BlockUser
+User --> UC_ViewFeed
+User --> UC_ReportPost
+User --> UC_EditProfile
+User --> UC_Login
+User --> UC_RegisterAccount
+User --> UC_DeletePost
+
+Service --> UC_ReceiveNotification
+Service --> UC_AuthenticateUser
+
+UC_PostPhoto .> UC_SharePost : <<extend>>
+UC_PostPhoto .> UC_LikePost : <<extend>>
+UC_SendMessage .> UC_ReceiveNotification : <<extend>>
+UC_CommentPost .> UC_ReceiveNotification : <<extend>>
+UC_ViewFeed .> UC_ReportPost : <<extend>>
+
+UC_UploadStory --> UC_PostPhoto : <<use>>
+UC_EditProfile --> UC_AuthenticateUser : <<use>>
+UC_DeletePost --> UC_AuthenticateUser : <<use>>
+UC_RegisterAccount --> UC_AuthenticateUser : <<use>>
+UC_Login --> UC_AuthenticateUser : <<use>>
+UC_ChangePassword --> UC_AuthenticateUser : <<use>>
+
+@enduml
