@@ -1,55 +1,50 @@
 @startuml
 left to right direction
+skinparam monochrome true
 
-actor User
-actor Service
+actor "User" as User
+actor "Moderator" as Mod
 
-usecase "Share post" as UC_SharePost
-usecase "Post photo" as UC_PostPhoto
-usecase "Like post" as UC_LikePost
-usecase "Upload story" as UC_UploadStory
-usecase "Send message" as UC_SendMessage
-usecase "Receive notification" as UC_ReceiveNotification
-usecase "Comment post" as UC_CommentPost
-usecase "Change password" as UC_ChangePassword
-usecase "Block user" as UC_BlockUser
-usecase "View feed" as UC_ViewFeed
-usecase "Report post" as UC_ReportPost
-usecase "Edit profile" as UC_EditProfile
-usecase "Login" as UC_Login
-usecase "Register account" as UC_RegisterAccount
-usecase "Delete post" as UC_DeletePost
-usecase "Authenticate user" as UC_AuthenticateUser
+User -- (Log in)
+User -- (Register account)
+User -- (View feed)
+User -- (View post details)
+User -- (Like post)
+User -- (Comment post)
+User -- (Share post)
+User -- (Report post)
+User -- (Delete post)
+User -- (Post photo)
+User -- (Upload story)
+User -- (Send message)
+User -- (Block user)
+User -- (View profile)
+User -- (Review report)
+(Receive notification) -- User
 
-User --> UC_SharePost
-User --> UC_PostPhoto
-User --> UC_LikePost
-User --> UC_UploadStory
-User --> UC_SendMessage
-User --> UC_CommentPost
-User --> UC_ChangePassword
-User --> UC_BlockUser
-User --> UC_ViewFeed
-User --> UC_ReportPost
-User --> UC_EditProfile
-User --> UC_Login
-User --> UC_RegisterAccount
-User --> UC_DeletePost
+Mod -- (Review report)
+Mod -- (Ban User)
+Mod -- (Delete reported post)
 
-Service --> UC_ReceiveNotification
-Service --> UC_AuthenticateUser
+(Comment post) ..> (Receive notification) : <<Extends>>
+(Send message) ..> (Receive notification) : <<Extends>>
+(Like post) ..> (Receive notification) : <<Extends>>
 
-UC_PostPhoto .> UC_SharePost : <<extend>>
-UC_PostPhoto .> UC_LikePost : <<extend>>
-UC_SendMessage .> UC_ReceiveNotification : <<extend>>
-UC_CommentPost .> UC_ReceiveNotification : <<extend>>
-UC_ViewFeed .> UC_ReportPost : <<extend>>
+(Share post) ..> (View post details) : <<Extends>>
+(Delete post) ..> (View post details) : <<Extends>>
+(Report post) ..> (View post details) : <<Extends>>
+(Log in) ..> (View post details) : <<Extends>>
+(Register account) ..> (View post details) : <<Extends>>
+(Comment post) ..> (View post details) : <<Extends>>
 
-UC_UploadStory --> UC_PostPhoto : <<use>>
-UC_EditProfile --> UC_AuthenticateUser : <<use>>
-UC_DeletePost --> UC_AuthenticateUser : <<use>>
-UC_RegisterAccount --> UC_AuthenticateUser : <<use>>
-UC_Login --> UC_AuthenticateUser : <<use>>
-UC_ChangePassword --> UC_AuthenticateUser : <<use>>
+(Block user) ..> (View profile) : <<Use>>
+(Ban User) ..> (View profile) : <<Use>>
+
+(Review report) ..> (View post details) : <<Use>>
+
+(Delete reported post) ..> (Review report) : <<Use>>
+
+(Delete reported post) ..> (Log moderation action) : <<Use>>
+(Ban User) ..> (Log moderation action) : <<Use>>
 
 @enduml
