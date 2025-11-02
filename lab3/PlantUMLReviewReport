@@ -1,0 +1,71 @@
+actor "User" as User
+participant "System" as System
+database "Data Base" as DB
+actor "Moderator" as Moderator
+
+skinparam actor {
+  BorderColor black
+  ArrowColor black
+}
+skinparam participant {
+  BorderColor black
+}
+skinparam database {
+  BorderColor black
+}
+
+User -> System: 1. send report
+activate System
+System -> DB: 2. insert report
+activate DB
+DB --> System: 3. save report
+deactivate DB
+System -> User: 4. send confirmation
+deactivate System
+
+Moderator -> System: 5. request active report
+activate System
+System -> DB: 6. select active report
+activate DB
+DB --> System: 7. report list
+deactivate DB
+System -> Moderator: 8. display report
+deactivate System
+
+Moderator -> System: 9. review report
+activate System
+
+alt detele post
+    System -> DB: 10. delete post
+    activate DB
+    DB --> System: 11. ok
+    deactivate DB
+    System -> DB: 12. log action
+    activate DB
+    DB --> System: 13. ok
+    deactivate DB
+else ban user
+    System -> DB: 10. update user status
+    activate DB
+    DB --> System: 11. ok
+    deactivate DB
+    System -> DB: 12. log action
+    activate DB
+    DB --> System: 13. ok
+    deactivate DB
+else dismiss
+    System -> DB: 10. update report status
+    activate DB
+    DB --> System: 11. ok
+    deactivate DB
+    System -> DB: 12. log action
+    activate DB
+    DB --> System: 13. ok
+    deactivate DB
+end
+
+System -> Moderator: 14. display result
+deactivate System
+destroy System
+
+@enduml
