@@ -1,0 +1,48 @@
+@startuml
+actor "User" as User
+participant "System" as System
+database "Data Base" as DB
+
+skinparam actor {
+  BorderColor black
+  ArrowColor black
+}
+skinparam participant {
+  BorderColor black
+}
+skinparam database {
+  BorderColor black
+}
+
+User -> System: 1. select post
+activate System
+System -> DB: 2. get post details
+activate DB
+DB --> System: 3. post data
+deactivate DB
+System -> DB: 4. get post comment
+activate DB
+DB --> System: 5. comment list
+deactivate DB
+System --> User: 6. display post
+deactivate System
+
+User -> System: 7. submit comment
+activate System
+System -> System: 8. validate comment
+
+System -> DB: 9. insert comment
+activate DB
+DB --> System: 10. comment save
+deactivate DB
+
+System -> DB: 11. get post comment
+activate DB
+DB --> System: 12. new comment list
+deactivate DB
+
+System --> User: 13. display comment
+deactivate System
+destroy System
+
+@enduml
