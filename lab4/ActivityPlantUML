@@ -1,0 +1,60 @@
+@startuml
+skinparam activity {
+  BackgroundColor White
+  BorderColor Black
+  ArrowColor Black
+}
+
+|User|
+start
+:Select content for report;
+:Fill out report form;
+:send report;
+
+|System|
+:Receive report;
+
+if () then (no validate data)
+    |User|
+    :Receive error notification;
+    stop
+else (validate data)
+    |System|
+    fork
+        :register report;
+    fork again
+        :create ticket for moderation;
+    end fork
+    :notify moderator;
+endif
+
+|Moderator|
+:receive report alert;
+:view report details;
+
+switch ()
+case ( everything ok )
+    :dismiss report;
+    :close ticket;
+case ( delete post )
+    :delete post;
+    |System|
+    :update post status "delete;
+    :send warming to the author;
+case (ban user)
+    :ban user;
+    |System|
+    :Terminate active user sessions;
+    :Send ban email;
+endswitch
+
+|System|
+
+:update report status "Resolved";
+:log moderation action;
+
+|Moderator|
+:move to next report;
+
+stop
+@enduml
