@@ -1,0 +1,142 @@
+---
+config:
+  layout: elk
+---
+flowchart LR
+ subgraph ProfilePage["Profile page"]
+        EditProfile["Edit profile"]
+        UserInfo_Profile["User info"]
+        ProfileComponents["Profile page components"]
+  end
+ subgraph ChatPage["Chat page"]
+        MessageWindow["Message window"]
+        UserInfo_Chat["User info"]
+        ChatComponents["Chat page components"]
+  end
+ subgraph FeedPage["Feed page"]
+        CreatePostModal["Create post modal"]
+        PostList["Post list"]
+        FeedComponents["Feed page components"]
+  end
+ subgraph AuthPage["Auth page"]
+        RegisterForm["Register form"]
+        LoginForm["Login form"]
+        AuthComponents["Auth page components"]
+  end
+ subgraph ModeratorPage["Moderator page"]
+        ReviewPanel["Review panel"]
+        ReportList["Report list"]
+        BanControls["Ban controls"]
+        ModeratorComponents["Moderator page components"]
+  end
+ subgraph Pages["Pages"]
+        ProfilePage
+        ChatPage
+        FeedPage
+        AuthPage
+        ModeratorPage
+  end
+ subgraph Stores["Stores"]
+        ProfileStore["Profile store"]
+        ChatStore["Chat store"]
+        FeedStore["Feed store"]
+        AuthStore["Auth store"]
+        ModeratorStore["Moderator store"]
+  end
+ subgraph APIClient["API client"]
+        ProfileAPI["Profile API"]
+        ChatAPI["Chat API"]
+        FeedAPI["Feed API"]
+        AuthAPI["Auth API"]
+        ModeratorAPI["Moderator API"]
+  end
+ subgraph ClientApplication["Client application"]
+        Pages
+        Stores
+        LocalStorage[("Local storage")]
+        APIClient
+  end
+ subgraph ChatModule["Chat module"]
+        ChatController["Chat controller"]
+        ChatService["Chat service"]
+        MessageRepo["Message repository"]
+  end
+ subgraph AuthModule["Auth module"]
+        AuthController["Auth controller"]
+        AuthService["Auth service"]
+        AuthRepo["Auth repository"]
+  end
+ subgraph UserModule["User module"]
+        UserController["User controller"]
+        UserService["User service"]
+        UserRepo["User repository"]
+  end
+ subgraph ContentModule["Content module"]
+        PostController["Post controller"]
+        PostService["Post service"]
+        PostRepo["Post repository"]
+  end
+ subgraph ModeratorModule["Moderator module"]
+        ReportController["Report controller"]
+        ModerationService["Moderation service"]
+        ReportRepo["Report repository"]
+        AuditRepo["Audit log repository"]
+  end
+ subgraph Modules["Modules"]
+        ChatModule
+        AuthModule
+        UserModule
+        ContentModule
+        ModeratorModule
+        Validator["Validator"]
+        Auth["Auth"]
+        JSONValidator["JSON schema validator"]
+  end
+  subgraph APIGateway["API Gateway"]
+    HTTPRouter
+    EntryConfig
+    Modules
+    DBPool
+  end
+    Stores --- LocalStorage
+    Pages --- Stores
+    Stores --- APIClient
+
+    APIClient --- HTTPRouter["HTTP router"]
+    HTTPRouter --- EntryConfig["EntryPoint config"]
+    HTTPRouter --- Validator
+    HTTPRouter --- Auth
+    EntryConfig ---- AuthModule
+    EntryConfig ---- ChatModule
+    EntryConfig ---- UserModule
+    EntryConfig ---- ContentModule
+    EntryConfig ---- ModeratorModule
+    Auth --- AuthModule
+
+    AuthModule --- DBPool
+    ChatModule ---- DBPool
+    UserModule --- DBPool
+    ContentModule --- DBPool
+    ModeratorModule --- DBPool
+
+    ChatController ---- ChatService
+    ChatService ---- MessageRepo
+    AuthController --- AuthService
+    AuthService --- AuthRepo
+    UserController --- UserService
+    UserService --- UserRepo
+    PostController --- PostService
+    PostService --- PostRepo
+    ReportController --- ModerationService
+    ModerationService --- ReportRepo
+    ModerationService --- AuditRepo
+
+    UserService --> ChatController
+    AuthService --> UserController
+    UserService --> PostController
+    UserService --> ReportController
+    PostService --> ReportController
+
+    Validator --- JSONValidator
+    DBPool["DB connection pool"] --- Postgres[("PostgreSQL")]
+    
